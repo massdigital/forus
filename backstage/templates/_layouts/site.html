@@ -1,0 +1,111 @@
+{#
+
+ # The site layout template
+ # ------------------------
+ #
+ # This layout template extends the _layouts/base.html layout, and defines the
+-#}
+
+{% extends "_layouts/base" %}
+
+{# Define the site navigation #}
+{% set nav = {
+about:    { title: "The Brewery", desc: "About Us" },
+services: { title: "How It’s Made", desc: "Services" },
+work:     { title: "What’s On Tap", desc: "Our Work" },
+news:     { title: "Brew News", desc: "The Latest" }
+} %}
+
+{# Set the `bodyClass` variable to the entry's section handle if there is one,
+   or the first URI segment (this is used by the parent template) #}
+{% if bodyClass is not defined %}
+	{% set bodyClass = entry is defined ? entry.section.handle : craft.request.firstSegment %}
+{% endif %}
+
+{# Set the `title` variable to the nav item that matches the first segment #}
+{% if nav[bodyClass] is defined %}
+{% set title %}{% if title is defined %}{{ title }} - {% endif %}{{ nav[bodyClass].title }}{% endset %}
+{% endif %}
+
+
+{% block body %}
+	
+
+
+	<main>
+		{% block main %}{% endblock %}
+	</main>
+<footer class="main-footer">
+    <div class="contain">
+        <div class="social-links">
+            <ul>
+                <li><a class="social-fb" target="_blank" href="https://www.facebook.com/MERRELLCO?fref=ts"></a></li>
+                <li><a class="social-tw" href="https://twitter.com/MERRELLCOLOMBIA" target="_blank"></a></li>
+                <li><a class="social-inst" href="https://instagram.com/merrellcolombia/" target="_blank"></a></li>
+                <li><a class="social-yt" href="https://www.youtube.com/channel/UC4R8pIca-zMguRN3LP1ZMkA" target="_blank"></a></li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="sitemap-nav">
+                <div class="half-col">
+                    <h5>servicio al cliente</h5>
+                    <ul>
+                        <li>(800) 288-3124</li>
+                        <li><a>contáctenos</a></li>
+                        <li><a>faqs</a></li>
+                    </ul>
+                </div>
+                <div class="half-col">
+                    <h5>más popular</h5>
+                    <ul>
+                        <li><a>hiking</a></li>
+                        <li><a>trail running</a></li>
+                        <li><a>trekking</a></li>
+                        <li><a>casual hombres</a></li>
+                        <li><a>casual mujeres</a></li>
+                        <li><a>última colección</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="email-signup-box">
+                <h5>customer service</h5>
+                <p><strong>Regístrese para ser el primero en recibir nuestras noticias</strong></p>
+                <div class="ads">
+                    <!--ADS Image-->
+                </div>
+                <div class="box-eblast">
+                    <!--<input type="email" placeholder="regístrese">-->
+                    <!--<input type="submit">-->
+                    <form class="newsletter-form" action="" method="POST">
+                        <input type="hidden" name="action" value="mailchimpSubscribe/list/Subscribe">
+                        {#<input type="hidden" name="redirect" value="newsletter/receipt">#}
+
+                        {% if mailchimpSubscribe is defined %}
+                        {% if (not mailchimpSubscribe.success) and (mailchimpSubscribe.errorCode!='1000') %}
+                        <p>Un error ha ocurrido. Por favor intente de nuevo.</p>
+                        {% endif %}
+                        {% endif %}
+
+
+                            <input type="email" name="email" value="{% if (mailchimpSubscribe is defined) and (not mailchimpSubscribe.success) %}{{ mailchimpSubscribe.values.email }}{% endif %}"/>
+
+
+                        <input type="submit" name="" value="Subscribe"/>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="col-a">
+                <p>estás viendo el sitio para colombia</p>
+                <p><a href="http://www.merrell.com/US/en/country"> seleccionar otro país</a></p>
+            </div>
+            <div class="col-b">
+                <p>© {{ now|date('Y') }} MERRELL.<span>todos los derechos reservados</span></p>
+                <p><a>mapa del sitio</a><a href="">política de privacidad</a><a href="">terminos de uso</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

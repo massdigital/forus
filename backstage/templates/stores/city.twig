@@ -1,0 +1,67 @@
+{#
+ # News index template
+ # -------------------
+ #
+ # This template gets loaded when "/news" is requested.
+-#}
+{% extends "_layouts/site" %}
+{% set title = category.title %}
+{% block main %}
+<section class="resetbg store-contain">
+ <nav class="breadcrumbs category-aside">
+  <ul>
+   <li><a href="{{ siteUrl }}">home</a></li>
+   <li><a href="{{ siteUrl }}stores">Tiendas</a></li>
+   <li>{{ category.title }}</li>
+  </ul>
+ </nav><!--/.breadcrumbs-->
+ <div class="contain store-bg">
+  <div class="row">
+   {% set options = {
+   id: 'map',
+   width: '100%',
+   height: '450px',
+   options: {
+   disableDoubleClickZoom: false,
+   scrollwheel:  false,
+
+   }
+   } %}
+   <section class="gmap-wrapper">
+   {% set StoreLocation = craft.entries.relatedTo(category) %}
+   {% paginate craft.entries.relatedTo(category).limit(10).order('postDate desc') as StoreLocation %}
+   {{ craft.googleMaps.map(options) }}
+   {% for storeEntry in StoreLocation %}
+    {{ craft.googleMaps.data('map', storeEntry.googleMaps) }}
+   {% endfor %}
+   {% endpaginate %}
+    <ul  id="be-select" tabindex="0">
+     <li><span>{{ category.title  }}</span> </li>
+     {% nav category in craft.categories.group('stores').order('title') %}
+
+     <li><a href="{{ category.url }}">{{ category.title }}</a></li>
+     {% endnav %}
+    </ul>
+    </section>
+  </div>
+  <div class="row store-content">
+   {% set StoreLocation = craft.entries.relatedTo(category) %}
+   {% paginate craft.entries.relatedTo(category).limit(10).order('postDate desc') as StoreLocation %}
+
+   {% for storeEntry in StoreLocation %}
+    <article class="store-item">
+     <h3>{{ storeEntry.title }}</h3>
+     <p>{% for category in storeEntry.ciudad %}{{ category.title }}{% endfor %}</p>
+     <ul>
+      <li class="icon-marker">{{ storeEntry.direccion }}</li>
+      <li class="icon-phone">
+       {{ storeEntry.telefono }}
+      </li>
+     </ul>
+    </article>
+   {% endfor %}
+   {% endpaginate %}
+  </div>
+ </div>
+ </section>
+{% endblock %}

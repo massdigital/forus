@@ -1,0 +1,107 @@
+{#
+ # News index template
+ # -------------------
+ #
+ # This template gets loaded when "/news" is requested.
+-#}
+{% extends "_layouts/site" %}
+{% set title = category.title %}
+{% block main %}
+{% cache for 3 weeks %}
+<section class="resetbg blog-contain">
+<nav class="breadcrumbs category-aside">
+        <ul>
+          <li><a href="{{ siteUrl }}">home</a></li>
+          <li><a href="{{ siteUrl }}blog">Blog</a></li>
+          <li>{{ category.title }}</li>
+        </ul>
+    </nav><!--/.breadcrumbs-->
+    <div class="contain">
+       <div class="row">
+            <div class="main-colum">
+            {% set blogEntries = craft.entries.relatedTo(category) %}
+            {% paginate craft.entries.relatedTo(category).limit(10).order('postDate desc') as blogEntries %}
+            {% for blogEntry in blogEntries %}
+            
+            <article class="article-item item--summary">
+                {% set image = blogEntry.featuredImage.first() %} 
+                {% if image %}
+                <div class="media {% if blogEntry.type == 'video' %}video{% endif %}">
+                  <figure>
+
+
+                      <img src="{{ image.getUrl('heroHight') }}" alt="{{ blogEntry.title }}"/>
+
+                  </figure>
+                  <time pubdate="pubdate" datetime="{{ blogEntry.postDate.format('Y-m-d') }}" title="{{ blogEntry.postDate.format('F d Y') }}">{{ blogEntry.postDate.format('d') }} <span>{{ blogEntry.postDate.format('M Y') }}</span> </time>
+                  {% if blogEntry.type == 'video'  %}
+                    <span class="play-icon"></span>
+                   {% endif %}
+                </div><!--/.media-->
+                {% endif %}
+                {% if image %}
+                <div class="summary">
+                 {% endif %}
+                    <div class="byline">
+                        <address class="author">
+                            By <a rel="author" href="">{{ blogEntry.author.name }}</a> <span class="relat-cat">{% for category in blogEntry.category %}, {{ category.title }}{% endfor %}{#| <a class="count-comments">12 Comentarios</a>#}
+                        </address>
+                    </div><!--/.byline-->
+                    <header>
+                         <h1 class="headline">{{ blogEntry.title }}</h1>
+                    </header>
+                    {% if blogEntry.type == 'video' %}
+                    <a href="{{ blogEntry.url }}" class="btn-link" title="{{ blogEntry.title }}">ver ahora</a> 
+                    {% elseif  blogEntry.type == 'link' %}
+                    <a href="{{blogEntry.linkUrl}}" class="btn-link">{{ blogEntry.linkName }}</a>
+                    {% else %}
+                    <a href="{{ blogEntry.url }}" class="btn-link">leer más</a>
+                    {% endif %}
+                    {% if blogEntry.shortDescription %}
+                    <p>{{ blogEntry.shortDescription }}</p>
+                    {% endif %}
+                {% if image %}
+                </div>
+                {% endif %}
+                
+                
+                
+               
+                
+               
+                
+            </article>
+            
+            {% endfor %}
+            <nav class="pagination">
+                        <ul>
+                            {% if paginate.prevUrl %}
+                                <li><a href="{{ paginate.prevUrl }}" class="pag-prev-link">anterior</a></li>
+                            {% endif %}
+
+                            {% for page, url in paginate.getPrevUrls(5) %}
+                                <li><a href="{{ url }}">{{ page }}</a></li>
+                            {% endfor %}
+
+                            <li class="current"><strong>{{ paginate.currentPage }}</strong></li>
+
+                            {% for page, url in paginate.getNextUrls(5) %}
+                                <li><a href="{{ url }}">{{ page }}</a></li>
+                            {% endfor %}
+
+                            {% if paginate.nextUrl %}
+                                <li><a href="{{ paginate.nextUrl }}" class="pag-next-link">siguiente</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endpaginate %}
+            
+
+        </div><!--/.main-colum--> 
+        {% include "_includes/sidebar" %}
+    </div>
+    
+
+</section>
+ {% endcache %}
+{% endblock %}

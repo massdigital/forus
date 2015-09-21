@@ -1,0 +1,65 @@
+<aside class="right-rail">
+	<div class="module-box search-blog">
+		<form action="{{ url('search/results') }}">
+		    <input type="search" name="q" placeholder="Buscar..">
+		    
+		</form>
+	</div> 
+	<div class="module-box">
+      <h3>CATEGORÍAS</h3>
+      <ul class="list-arrow">
+      	{% nav category in craft.categories.group('blogCat').order('title') %}
+      	{% set entryCount = craft.entries.relatedTo(category).total() %}
+        <li><a href="{{ category.url }}">{{ category.title }} <span class="total">({{ entryCount }})</span></a></li>
+        {% endnav %}
+      </ul>
+
+    </div>
+    {#<div class="module-box">
+      <h3>MÁS LEÍDOS</h3>
+      <ul class="popular-posts">
+        <li>
+          <figure><img src="_assets/images/fpo/article/popular-post.jpg" alt="fpo"></figure>
+          <div class="text">
+            <h5><a href="#">Lo nuevo running</a></h5>
+            <p>Simon R - 06 Julio</p>
+          </div>
+        </li>
+        <li>
+          <figure><img src="_assets/images/fpo/article/popular-post.jpg" alt="fpo"></figure>
+          <div class="text">
+            <h5><a href="#">Lo nuevo running</a></h5>
+            <p>Simon R - 06 Julio</p>
+          </div>
+        </li>
+        <li>
+          <figure><img src="_assets/images/fpo/article/popular-post.jpg" alt="fpo"></figure>
+          <div class="text">
+            <h5><a href="#">Lo nuevo running</a></h5>
+            <p>Simon R - 06 Julio</p>
+          </div>
+        </li>
+        <li>
+          <figure><img src="_assets/images/fpo/article/popular-post.jpg" alt="fpo"></figure>
+          <div class="text">
+            <h5><a href="#">Lo nuevo running</a></h5>
+            <p>Simon R - 06 Julio</p>
+          </div>
+        </li>
+        <li>
+          <figure><img src="_assets/images/fpo/article/popular-post.jpg" alt="fpo"></figure>
+          <div class="text">
+            <h5><a href="#">Lo nuevo running</a></h5>
+            <p>Simon R - 06 Julio</p>
+          </div>
+        </li>
+        <li>
+          <figure><img src="_assets/images/fpo/article/popular-post.jpg" alt="fpo"></figure>
+          <div class="text">
+            <h5><a href="#">Lo nuevo running</a></h5>
+            <p>Simon R - 06 Julio</p>
+          </div>
+        </li>
+      </ul>
+    </div>#}
+</aside>

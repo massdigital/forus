@@ -1,0 +1,33 @@
+<div class="desktop-feature js--scroll">
+{% set featuredInHome = craft.entries.section('blog').featuredInHomepage('1').limit(4).find() %}
+{% paginate craft.entries.section('blog').limit(4).order('postDate desc') as blogEntries %}
+{% for featuredContent in featuredInHome %}
+<div class="feature-item">
+	<div class="media {% if featuredContent.type == 'video' %}video{% endif %}">
+    	{% set image = featuredContent.featuredImage.first() %}
+	          {% if image %}
+	          <figure><img src="{{ image.getUrl('squareh') }}" alt="{{ featuredContent.title }}"/></figure>
+	          {% endif %}
+
+    {% if featuredContent.type == 'video' %}
+    <span class="play-icon"></span>
+    {% endif %}
+ </div>
+ <div class="content">
+ 	<h2>{{ featuredContent.title }}</h2>
+ 	<span class="desc">{{featuredContent.subHeading}}</span>
+ 	{% if featuredContent.type == 'link' %}
+    <a href="{{featuredContent.linkUrl}}" class="btn-link">{{ featuredContent.linkName }}</a>
+    {% elseif featuredContent.type == 'video' %}
+    <a href="{{ featuredContent.url }}" class="btn-link" title="{{ featuredContent.title }}">ver ahora</a>
+    {% else %}
+    <a href="{{ featuredContent.url }}" class="btn-link" title="{{ featuredContent.title }}">leer más</a>
+    {% endif %}
+ </div>
+</div>
+
+{% endfor %}
+
+ {% endpaginate %}
+
+</div>

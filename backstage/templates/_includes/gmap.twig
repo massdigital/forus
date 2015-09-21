@@ -1,0 +1,33 @@
+{% set options = {
+    id: 'map',
+    width: '100%',
+    height: '450px',
+    options: {
+        disableDoubleClickZoom: false,
+        scrollwheel:  false,
+
+    }
+} %}
+<section class="gmap-wrapper">
+    <div class="contain">
+        <ul  id="be-select" tabindex="0" class="gmap-city">
+            <li><span>Seleccionar ciudad</span> </li>
+            {% nav category in craft.categories.group('stores').order('title') %}
+
+            <li><a href="{{ category.url }}">{{ category.title }}</a></li>
+            {% endnav %}
+        </ul>
+    </div>
+    {{ craft.googleMaps.map(options) }}
+
+    {% for entry in craft.entries.section('stores') %}
+
+        {{ craft.googleMaps.data('map', entry.googleMaps) }}
+
+    {% endfor %}
+    
+    
+</section>
+
+
+

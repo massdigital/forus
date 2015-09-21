@@ -1,0 +1,42 @@
+{#
+ # Store index template
+ # -------------------
+ #
+ # This template gets loaded when "/store" is requested.
+-#}
+{% extends "_layouts/site" %}
+{% set title = "Tiendas" %}
+{% block main %}
+    <section class="resetbg store-contain">
+        <nav class="breadcrumbs category-aside">
+            <ul>
+                <li><a href="{{ siteUrl }}">home</a></li>
+                <li>localizar tiendas</li>
+            </ul>
+        </nav><!--/.breadcrumbs-->
+        <div class="contain store-bg">
+            <div class="row">
+                {% include "/_includes/gmap" %}
+            </div>
+            <div class="row store-content">
+
+                {% for entry in craft.entries.section('stores') %}
+                    <article class="store-item">
+                        <h3>{{ entry.title }}</h3>
+                        <p>{% for category in entry.ciudad %}{{ category.title }}{% endfor %}</p>
+                        <ul>
+                            <li class="icon-marker">{{ entry.direccion }}</li>
+                            <li class="icon-phone">
+                                {{ entry.telefono }}
+                            </li>
+                        </ul>
+                    </article>
+
+                {% endfor %}
+            </div>
+        </div>
+
+    </section>
+
+
+{% endblock %}

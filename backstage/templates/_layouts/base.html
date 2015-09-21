@@ -1,0 +1,193 @@
+{#
+ # The base layout template
+ # ------------------------
+ #
+ #   * `_layouts/base.html`: A sub-layout, which in turn is extended by all the
+ #                           main site templates.
+ #
+ #   * `offline.html`:       The template that we serve when the site is offline
+ #
+-#}
+
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+	{% block head %}
+
+		<meta charset="utf-8">
+        <title>{% if title is defined %}{{ title }} - {% endif %}{{ siteName }}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		{% set entry = entry is defined ? entry %}
+		{% set fallback = craft.globals.getSetByHandle('metaFallback') %}
+
+		{{ craft.simpleMeta.output(entry, fallback)|raw }}
+        <link type="text/plain" rel="author" href="https://goo.gl/08x6Ex" />
+        <link rel="shortcut icon" href="{{ siteUrl }}favicon.ico">
+
+		<link rel="stylesheet" href="{{ siteUrl }}_assets/stylesheets/main.min-992961d7b5.css">
+        <script src="{{ siteUrl }}_assets/javascripts/vendors/modernizr.min-6eaf7a8f2b.js"></script>
+        {% if not craft.config.devMode %}
+		    <script type="text/javascript">
+		        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+				  ga('create', '', 'auto');
+				  ga('send', 'pageview')
+		    </script>
+		{% endif %}
+	{% endblock %}
+	{% block headinline %}
+	{% endblock %}
+</head>
+<body {% if bodyClass is defined %}class="{{ bodyClass }}"{% endif %}>
+    <div class="background-container"></div>
+    <header class="main-header">
+    <div class="contain">
+      <nav class="top-header">
+          {{ craft.amNav.getNav("topMenu", {
+          }) }}
+        <div class="box-country">
+          <ul class="no-js">
+            <li><a data-country="co" href="#" class="clicker"><span class="flag-co sprite-flag"></span></a>
+              <ul role="menu">
+                <li role="menuitem"><a data-country="us" href="http://www.merrell.com/US/en/home" class="flag-us"><span class="flag-us sprite-flag"></span>United States</a></li>
+                <li role="menuitem"><a data-country="gb" href="http://www.merrell.com/UK/en_GB/home" class="flag-gb"><span class="flag-gb sprite-flag"></span>United Kingdom</a></li>
+                <li role="menuitem" class="countrywithlocale toggle"><a data-country="ca" href="http://www.merrell.ca/CA/en" class="flag-ca"><span class="flag-ca sprite-flag"></span>Canada</a></li>
+                <li role="menuitem" style="display: none;" class="toggle-content">
+                  <div class="locale"><a data-country="ca" href="http://www.merrell.ca/CA/en" class="flag-ca"><span></span>English</a></div>
+                  <div class="locale"><a data-country="ca" href="http://www.merrell.ca/CA/fr" class="flag-ca"><span></span>Français</a></div>
+                </li>
+                <li role="menuitem"><a data-country="au" href="http://www.merrellaustralia.com.au/AU/en" class="flag-au"><span class="flag-au sprite-flag"></span>Australia</a></li>
+                <li role="menuitem"><a data-country="be" href="http://www.merrell.com/BE/fr_BE/home" class="flag-be"><span class="flag-be sprite-flag"></span>Belgium</a></li>
+                <li role="menuitem"><a data-country="cl" href="http://www.merrell.cl/" class="flag-cl"><span class="flag-cl sprite-flag"></span>Chile</a></li>
+                <li role="menuitem"><a data-country="cn" href="http://www.merrell.com.cn/" class="flag-cn"><span class="flag-cn sprite-flag"></span>中国</a></li>
+                <li role="menuitem"><a data-country="hr" href="http://www.merrell.hr/" class="flag-hr"><span class="flag-hr sprite-flag"></span>Hrvatska</a></li>
+                <li role="menuitem"><a data-country="dk" href="http://www.merrell.dk/DK/da" class="flag-dk"><span class="flag-dk sprite-flag"></span>Danmark</a></li>
+                <li role="menuitem"><a data-country="de" href="http://www.merrell.com/DE/de_DE/home" class="flag-de"><span class="flag-de sprite-flag"></span>Deutschland</a></li>
+                <li role="menuitem"><a data-country="fr" href="http://www.merrell.com/FR/fr_FR/home" class="flag-fr"><span class="flag-fr sprite-flag"></span>France</a></li>
+                <li role="menuitem"><a data-country="it" href="http://www.merrell.it" class="flag-it"><span class="flag-it sprite-flag"></span>Italia</a></li>
+                <li role="menuitem"><a data-country="jp" href="http://www.merrell.jp/" class="flag-jp"><span class="flag-jp sprite-flag"></span>日本</a></li>
+                <li role="menuitem"><a data-country="kr" href="http://www.merrellkorea.co.kr/" class="flag-kr"><span class="flag-kr sprite-flag"></span>한국</a></li>
+                <li role="menuitem"><a data-country="mx" href="http://www.merrell.com.mx/" class="flag-mx"><span class="flag-mx sprite-flag"></span>México</a></li>
+                <li role="menuitem"><a data-country="mn" href="http://www.merrell.mn/" class="flag-mn"><span class="flag-mn sprite-flag"></span>Монгол Улс</a></li>
+                <li role="menuitem"><a data-country="nl" href="http://www.merrell.com/NL/nl_NL/home" class="flag-nl"><span class="flag-nl sprite-flag"></span>Nederland</a></li>
+                <li role="menuitem"><a data-country="nz" href="http://www.merrell.co.nz/NZ/en" class="flag-nz"><span class="flag-nz sprite-flag"></span>New Zealand</a></li>
+                <li role="menuitem"><a data-country="pl" href="http://www.merrell.pl/" class="flag-pl"><span class="flag-pl sprite-flag"></span>Polska</a></li>
+                <li role="menuitem"><a data-country="pt" href="http://www.merrell.pt/" class="flag-pt"><span class="flag-pt sprite-flag"></span>Portugal</a></li>
+                <li role="menuitem"><a data-country="ru" href="http://www.merrell.ru/" class="flag-ru"><span class="flag-ru sprite-flag"></span>Россия</a></li>
+                <li role="menuitem"><a data-country="ch" href="http://www.merrell.ch/CH/de" class="flag-ch"><span class="flag-ch sprite-flag"></span>Schweiz</a></li>
+                <li role="menuitem"><a data-country="si" href="http://www.merrell.si/" class="flag-si"><span class="flag-si sprite-flag"></span>Slovenija</a></li>
+                <li role="menuitem"><a data-country="za" href="http://www.merrell.co.za/ZA/en" class="flag-za"><span class="flag-za sprite-flag"></span>South Africa</a></li>
+                <li role="menuitem"><a data-country="fi" href="http://www.merrell.com/FI/fi_FI/home" class="flag-fi"><span class="flag-fi sprite-flag"></span>Suomi</a></li>
+                <li role="menuitem"><a data-country="se" href="http://www.merrell.com/SE/sv_SE/home" class="flag-se"><span class="flag-se sprite-flag"></span>Sverige</a></li>
+                <li role="menuitem"><a data-country="tw" href="http://www.merrell.com.tw/" class="flag-tw"><span class="flag-tw sprite-flag"></span>臺灣/台灣</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="inner-header">
+        <div class="row">
+          <div role="banner" class="brand">
+              <a href="{{ siteUrl }}"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAyMTUuOTM4IDM2IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyMTUuOTM4IDM2OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHN0eWxlIHR5cGU9InRleHQvY3NzIj4uc3Qwe2ZpbGw6I0Y0N0IyMDt9PC9zdHlsZT48Zz48Zz48cGF0aCBjbGFzcz0ic3QwIiBkPSJNNzkuNzMzLDEzLjkzNWMwLjAyNi0zLjYyNS0zLjE4NS02LjExNi03LjAyOS02LjExNkw1Ni41NzcsNy44MjFsMC4wMDEsMjAuMDQ2bDYuMTI3LTAuMDAzbDAtNy41NTlMNjcsMjAuMzAybDUuNzEzLDcuNTY1bDYuOTQ5LTAuMDAzbC02LjE1My03Ljg5NkM3Ni44ODksMjAuMDIyLDc5LjcwNiwxNy4zMTYsNzkuNzMzLDEzLjkzNXogTTcwLjEzOSwxNy4xMmwtNy40NTgsMC4wMDF2LTYuMTU4bDcuNTk0LTAuMDAxYzEuOC0wLjAyNiwzLjI5NSwxLjQ0NCwzLjI0MiwzLjE5M0M3My40NjEsMTUuODgyLDcxLjkxLDE3LjIyNSw3MC4xMzksMTcuMTJ6Ii8+PC9nPjwvZz48Zz48Zz48cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTA2LjU1MSwxMy45MzVjMC4wMjYtMy42MjUtMy4xODQtNi4xMTYtNy4wMjktNi4xMTZIODMuMzk1bDAuMDAyLDIwLjA0OWw2LjEyNy0wLjAwM2wtMC4wMDEtNy41NTlsNC4yOTUtMC4wMDRsNS43MTUsNy41NjVsNi45NDktMC4wMDNsLTYuMTU2LTcuODk2QzEwMy43MDcsMjAuMDIyLDEwNi41MjQsMTcuMzE2LDEwNi41NTEsMTMuOTM1eiBNOTYuOTU3LDE3LjEybC03LjQ1OSwwLjAwMXYtNi4xNThsNy41OTMtMC4wMDFjMS44MDEtMC4wMjYsMy4yOTUsMS40NDQsMy4yNDMsMy4xOTNDMTAwLjI3OSwxNS44ODIsOTguNzI4LDE3LjIyNSw5Ni45NTcsMTcuMTJ6Ii8+PC9nPjwvZz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjM5LjM0NiwxOC45NDcgNTEuMTQxLDE4Ljk0NSA1MS4xNDEsMTYuMDEzIDM5LjM5MSwxNi4wMTUgMzkuMzk0LDEwLjg4MSA1My4wNjgsMTAuODggNTMuMDY4LDcuODE4IDMzLjIxNyw3LjgxOSAzMy4yMTksMjcuODY3IDUzLjE4OSwyNy44NjQgNTMuMTg4LDI0Ljc5NyAzOS4zNDYsMjQuOCAiLz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExNi4yNTIsMTguOTQ3IDEyOC4wNDUsMTguOTQ1IDEyOC4wNDUsMTYuMDEzIDExNi4yOTUsMTYuMDE1IDExNi4yOTksMTAuODgxIDEyOS45NzMsMTAuODggMTI5Ljk3Myw3LjgxOCAxMTAuMTIxLDcuODE5IDExMC4xMjMsMjcuODY3IDEzMC4wOTQsMjcuODY0IDEzMC4wOTIsMjQuNzk3IDExNi4yNTIsMjQuOCAiLz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjE0LjI5MiwyMy4wMTkgNy45ODEsNy44MTggMCw3LjgxOCAwLjAwMiwyNy44NjcgMy43MDcsMjcuODY2IDMuNzA2LDExLjQzOSA5LjgxOSwyNy44NjQgMTYuNDM5LDI3Ljg2NyAyMi41MzgsMTEuNDI3IDIyLjU0MywyNy44NjYgMjguODEyLDI3Ljg2NSAyOC44MSw3LjgxOCAxOS45MjUsNy44MTggIi8+PHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxMzkuNTUzLDcuODIgMTMzLjQ3Myw3LjgyIDEzMy40NzEsMjcuODY3IDE1Mi42NzQsMjcuODYxIDE1Mi42NzYsMjQuODI0IDEzOS41NTMsMjQuODIzICIvPjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTYxLjU5Miw3LjgxNSAxNTUuNTEyLDcuODE1IDE1NS41MTIsMjcuODYxIDE3NC43MTMsMjcuODYxIDE3NC43MTUsMjQuODI0IDE2MS41OTQsMjQuODIzICIvPjxnPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMTMuMTY4LDExLjMwM2MwLTAuNzgsMC42MTEtMS4zOTIsMS4zOTEtMS4zOTJzMS4zNzksMC42MDYsMS4zNzksMS4zODVjMCwwLjc4Ni0wLjYwNSwxLjM5Ny0xLjM4NSwxLjM5N0MyMTMuNzc0LDEyLjY5NCwyMTMuMTY4LDEyLjA4OCwyMTMuMTY4LDExLjMwM3ogTTIxNS43LDExLjMwM2MwLTAuNjU0LTAuNDk4LTEuMTY0LTEuMTQ2LTEuMTY0Yy0wLjY0OSwwLTEuMTM5LDAuNTA0LTEuMTM5LDEuMTU3YzAsMC42NiwwLjQ5OCwxLjE2OSwxLjE0NSwxLjE2OUMyMTUuMjA3LDEyLjQ2NiwyMTUuNywxMS45NjMsMjE1LjcsMTEuMzAzeiBNMjE0LjAyLDEwLjUxMmgwLjU3YzAuMzU5LDAsMC41NjgsMC4xNTYsMC41NjgsMC40NjdjMCwwLjI0Ni0wLjExOSwwLjM3Mi0wLjI5OSwwLjQzMmwwLjMzLDAuNjI0aC0wLjMxOGwtMC4zMDctMC41ODJoLTAuMjR2MC41ODJoLTAuMzA1VjEwLjUxMnogTTIxNC41NzEsMTEuMjE5YzAuMTg2LDAsMC4yODktMC4wNiwwLjI4OS0wLjIyMmMwLTAuMTUtMC4xMDMtMC4yMTYtMC4yOTUtMC4yMTZoLTAuMjR2MC40MzhIMjE0LjU3MXoiLz48L2c+PHBhdGggY2xhc3M9InN0MCIgZD0iTTE5NC45NSwwYy05LjkzOSwwLTE4LDguMDY0LTE4LDE4YzAsOS45NDcsOC4wNjEsMTgsMTgsMThjOS45NDMsMCwxNy45OTYtOC4wNTQsMTcuOTk2LTE4QzIxMi45NDYsOC4wNjQsMjA0Ljg5MywwLDE5NC45NSwweiBNMjA1Ljg5NywyNC4wNlYxMy4yMzJsLTMuNjE1LDExLjg5NWwtNC44NTksMS40NTNsLTUuMzk1LTE0LjE2MnYxNS43NjVsLTcuNjYsMi4yODVWNS4xNzFsMTEuODU0LDEuODUxbDQuMDQ1LDExLjQxM2wyLjk4OC0xMC4yOTNsNS43OTUsMC45MTF2MTQuMDY0TDIwNS44OTcsMjQuMDZ6Ii8+PC9zdmc+" alt="{{ siteName }}"></a>
+
+          </div>
+          {#<div class="box-search">
+            <input type="search" placeholder="BUSCAR">
+            <input id="ftBtn54ccd82379a4483bb398668f90722a26" type="button" value="Buscar" class="btn-buscar">
+          </div>#}
+        </div>
+        <div class="row">
+          <div class="nav-inner">
+            <!--mobile-menu-->
+            <div class="hidden-desktop">
+              <div class="header-buttons">
+                <ul>
+                  <li><a class="nav-trigger icon-merrell">&#xe602;</a></li>
+                  {#<li><a class="search-trigger icon-merrell">&#xe603;</a></li>#}
+                  <li><a href="{{ siteUrl }}stores" class="location-trigger icon-merrell">&#xe601;</a></li>
+                    {#<li><span class="cart-trigger icon-merrell">&#xe600;</span></li>#}
+                </ul>
+              </div>
+              <ul style="display:none" class="submenu">
+
+                <li>
+                  {{ craft.amNav.getNav("mainNav", {
+					    id: 'navigation',
+					    class: 'topnav'
+					}) }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div><!--/.inner-header-->
+    </div>
+    <div class="hidden-mobile">
+
+        {% set nav = craft.amNav.getNavRaw("mainNav") %}
+
+        {% macro addNodeToNavigation(node, index) %}
+            {%- set nodeClasses = [] -%}
+            {%- if node.hasChildren -%}
+                {%- set nodeClasses = nodeClasses|merge(['has-children']) -%}
+            {%- endif -%}
+            {%- if node.active or node.hasActiveChild -%}
+                {%- set nodeClasses = nodeClasses|merge(['active']) -%}
+            {%- endif -%}
+            {%- if node.level == 1 and index == 1 -%}
+                {%- set nodeClasses = nodeClasses|merge(['first']) -%}
+            {%- endif -%}
+            {%- if node.listClass|length -%}
+                {%- set nodeClasses = nodeClasses|merge([node.listClass]) -%}
+            {%- endif -%}
+
+            <li{% if nodeClasses|length %} class="{{ nodeClasses|join(' ') }}"{% endif %}>
+                <a href="{{ node.url }}" title="{{ node.name }}"{% if node.blank %} target="_blank"{% endif %}>{{ node.name }}</a>
+                {% if node.hasChildren %}
+                    <div class="level{{ (node.level + 1) }}-wrapper">
+                        <ul class="child-{{ (node.level + 1) }}">
+                            {% for subnode in node.children %}
+                                {{ _self.addNodeToNavigation(subnode, loop.index) }}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                {% endif %}
+            </li>
+        {% endmacro %}
+
+            <ul id="nav" class="menu-category">
+                <li class="log">
+                    <div role="banner" class="brand brand-fixed">
+                        <a href="{{ siteUrl }}"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCAyMTUuOTM4IDM2IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyMTUuOTM4IDM2OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHN0eWxlIHR5cGU9InRleHQvY3NzIj4uc3Qwe2ZpbGw6I0Y0N0IyMDt9PC9zdHlsZT48Zz48Zz48cGF0aCBjbGFzcz0ic3QwIiBkPSJNNzkuNzMzLDEzLjkzNWMwLjAyNi0zLjYyNS0zLjE4NS02LjExNi03LjAyOS02LjExNkw1Ni41NzcsNy44MjFsMC4wMDEsMjAuMDQ2bDYuMTI3LTAuMDAzbDAtNy41NTlMNjcsMjAuMzAybDUuNzEzLDcuNTY1bDYuOTQ5LTAuMDAzbC02LjE1My03Ljg5NkM3Ni44ODksMjAuMDIyLDc5LjcwNiwxNy4zMTYsNzkuNzMzLDEzLjkzNXogTTcwLjEzOSwxNy4xMmwtNy40NTgsMC4wMDF2LTYuMTU4bDcuNTk0LTAuMDAxYzEuOC0wLjAyNiwzLjI5NSwxLjQ0NCwzLjI0MiwzLjE5M0M3My40NjEsMTUuODgyLDcxLjkxLDE3LjIyNSw3MC4xMzksMTcuMTJ6Ii8+PC9nPjwvZz48Zz48Zz48cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTA2LjU1MSwxMy45MzVjMC4wMjYtMy42MjUtMy4xODQtNi4xMTYtNy4wMjktNi4xMTZIODMuMzk1bDAuMDAyLDIwLjA0OWw2LjEyNy0wLjAwM2wtMC4wMDEtNy41NTlsNC4yOTUtMC4wMDRsNS43MTUsNy41NjVsNi45NDktMC4wMDNsLTYuMTU2LTcuODk2QzEwMy43MDcsMjAuMDIyLDEwNi41MjQsMTcuMzE2LDEwNi41NTEsMTMuOTM1eiBNOTYuOTU3LDE3LjEybC03LjQ1OSwwLjAwMXYtNi4xNThsNy41OTMtMC4wMDFjMS44MDEtMC4wMjYsMy4yOTUsMS40NDQsMy4yNDMsMy4xOTNDMTAwLjI3OSwxNS44ODIsOTguNzI4LDE3LjIyNSw5Ni45NTcsMTcuMTJ6Ii8+PC9nPjwvZz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjM5LjM0NiwxOC45NDcgNTEuMTQxLDE4Ljk0NSA1MS4xNDEsMTYuMDEzIDM5LjM5MSwxNi4wMTUgMzkuMzk0LDEwLjg4MSA1My4wNjgsMTAuODggNTMuMDY4LDcuODE4IDMzLjIxNyw3LjgxOSAzMy4yMTksMjcuODY3IDUzLjE4OSwyNy44NjQgNTMuMTg4LDI0Ljc5NyAzOS4zNDYsMjQuOCAiLz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjExNi4yNTIsMTguOTQ3IDEyOC4wNDUsMTguOTQ1IDEyOC4wNDUsMTYuMDEzIDExNi4yOTUsMTYuMDE1IDExNi4yOTksMTAuODgxIDEyOS45NzMsMTAuODggMTI5Ljk3Myw3LjgxOCAxMTAuMTIxLDcuODE5IDExMC4xMjMsMjcuODY3IDEzMC4wOTQsMjcuODY0IDEzMC4wOTIsMjQuNzk3IDExNi4yNTIsMjQuOCAiLz48cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjE0LjI5MiwyMy4wMTkgNy45ODEsNy44MTggMCw3LjgxOCAwLjAwMiwyNy44NjcgMy43MDcsMjcuODY2IDMuNzA2LDExLjQzOSA5LjgxOSwyNy44NjQgMTYuNDM5LDI3Ljg2NyAyMi41MzgsMTEuNDI3IDIyLjU0MywyNy44NjYgMjguODEyLDI3Ljg2NSAyOC44MSw3LjgxOCAxOS45MjUsNy44MTggIi8+PHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSIxMzkuNTUzLDcuODIgMTMzLjQ3Myw3LjgyIDEzMy40NzEsMjcuODY3IDE1Mi42NzQsMjcuODYxIDE1Mi42NzYsMjQuODI0IDEzOS41NTMsMjQuODIzICIvPjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iMTYxLjU5Miw3LjgxNSAxNTUuNTEyLDcuODE1IDE1NS41MTIsMjcuODYxIDE3NC43MTMsMjcuODYxIDE3NC43MTUsMjQuODI0IDE2MS41OTQsMjQuODIzICIvPjxnPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMTMuMTY4LDExLjMwM2MwLTAuNzgsMC42MTEtMS4zOTIsMS4zOTEtMS4zOTJzMS4zNzksMC42MDYsMS4zNzksMS4zODVjMCwwLjc4Ni0wLjYwNSwxLjM5Ny0xLjM4NSwxLjM5N0MyMTMuNzc0LDEyLjY5NCwyMTMuMTY4LDEyLjA4OCwyMTMuMTY4LDExLjMwM3ogTTIxNS43LDExLjMwM2MwLTAuNjU0LTAuNDk4LTEuMTY0LTEuMTQ2LTEuMTY0Yy0wLjY0OSwwLTEuMTM5LDAuNTA0LTEuMTM5LDEuMTU3YzAsMC42NiwwLjQ5OCwxLjE2OSwxLjE0NSwxLjE2OUMyMTUuMjA3LDEyLjQ2NiwyMTUuNywxMS45NjMsMjE1LjcsMTEuMzAzeiBNMjE0LjAyLDEwLjUxMmgwLjU3YzAuMzU5LDAsMC41NjgsMC4xNTYsMC41NjgsMC40NjdjMCwwLjI0Ni0wLjExOSwwLjM3Mi0wLjI5OSwwLjQzMmwwLjMzLDAuNjI0aC0wLjMxOGwtMC4zMDctMC41ODJoLTAuMjR2MC41ODJoLTAuMzA1VjEwLjUxMnogTTIxNC41NzEsMTEuMjE5YzAuMTg2LDAsMC4yODktMC4wNiwwLjI4OS0wLjIyMmMwLTAuMTUtMC4xMDMtMC4yMTYtMC4yOTUtMC4yMTZoLTAuMjR2MC40MzhIMjE0LjU3MXoiLz48L2c+PHBhdGggY2xhc3M9InN0MCIgZD0iTTE5NC45NSwwYy05LjkzOSwwLTE4LDguMDY0LTE4LDE4YzAsOS45NDcsOC4wNjEsMTgsMTgsMThjOS45NDMsMCwxNy45OTYtOC4wNTQsMTcuOTk2LTE4QzIxMi45NDYsOC4wNjQsMjA0Ljg5MywwLDE5NC45NSwweiBNMjA1Ljg5NywyNC4wNlYxMy4yMzJsLTMuNjE1LDExLjg5NWwtNC44NTksMS40NTNsLTUuMzk1LTE0LjE2MnYxNS43NjVsLTcuNjYsMi4yODVWNS4xNzFsMTEuODU0LDEuODUxbDQuMDQ1LDExLjQxM2wyLjk4OC0xMC4yOTNsNS43OTUsMC45MTF2MTQuMDY0TDIwNS44OTcsMjQuMDZ6Ii8+PC9zdmc+" alt="{{ siteName }}"></a>
+
+                    </div>
+                </li>
+                {% for node in nav %}
+                    {{ _self.addNodeToNavigation(node, loop.index) }}
+                {% endfor %}
+            </ul>
+
+    </div>
+  </header><!--./main-header-->
+	{% block body %}
+
+  {% endblock %}
+	{% block foot %}
+  {% endblock %}
+    <script src="/_assets/javascripts/vendors/jquery.js"></script>
+    <script src="/_assets/javascripts/vendors/picturefill.js"></script>
+    <script src="/_assets/javascripts/vendors/slick.js"></script>
+    <script src="/_assets/javascripts/vendors/jquery.form-validator.js"></script>
+    <script src="/_assets/javascripts/vendors/cloud-zoom.js"></script>
+    <script src="/_assets/javascripts/main.js"></script>
+    <script src="/_assets/javascripts/modules/heros.js"></script>
+    <script src="/_assets/javascripts/modules/Menu.js"></script>
+    {% block inlineJs %}
+    {% endblock %}
+</body>
+</html>

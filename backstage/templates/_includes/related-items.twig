@@ -1,0 +1,35 @@
+{% set entries = entry.slotItems %}
+			{% if entries | length %}
+<aside class="swatch-11 related-items">
+	<div class="contain">
+		 <h2 class="transform">artículos relacionados</h2>
+		 <div class="slots-content show--all">
+
+			    {% for entry in entries %}
+			       <article class="slot-item">
+			        <div class="media">
+			          {% set image = entry.featuredThumb.first() %}
+			          {% if image %}
+			          <figure><img src="{{ image.getUrl('slotContent') }}" alt="{{ image.title }}"/></figure>
+			          {% endif %}
+			          
+			        </div>
+			        <div class="slot-content">
+			          <h4>{{ entry.title }}</h4>
+			          <p>{{ entry.homeSummary }}</p>
+			          {% if entry.type == 'link' %}
+						<a href="{{entry.linkUrl}}" class="btn-link">{{ entry.linkName }}</a>
+					  {% else %}
+						
+						<a href="" class="btn-link">Leer más</a>
+					{% endif %}
+			        </div>
+			      </article>
+			    {% endfor %}
+
+
+		 	
+		 </div>
+	</div>
+</aside>
+			{% endif %}

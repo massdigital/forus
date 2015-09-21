@@ -1,0 +1,321 @@
+{#
+ # Homepage template
+ # ---------------
+ #
+ # When this template gets loaded, it will be because someone has accessed
+ # http://yoursite.com/ (without any URI). Craft checks to see if you have
+ # a Single section set to be the Homepage (as you do, by default), and
+ # loads the section’s Template (this file). A special ‘entry’ variable
+ # will already be set for you, assigned to the Homepage entry.
+ #
+ # It's worth noting that even if you didn't have a Homepage Single section,
+ # as long as this template remains at craft/templates/index.html, it
+ # would still be the one to get loaded when accessing http://yoursite.com/,
+ # albeit without an ‘entry’ variable already set for you.
+ #
+ # See this page for more details on how Craft routes requests:
+ # http://buildwithcraft.com/docs/routing
+ #}
+
+{% extends "_layouts/site" %}
+
+{% block headinline %}
+<style>
+@media (min-width: 53.125rem){
+{% for asset in entry.kitBackground %} 
+	.slot-kit{
+		background-image:url('{{ asset.url }}')
+	}
+	{% endfor %}
+}
+</style>
+{% endblock %}
+
+
+{% block main %}
+
+	<div class="hero js--main-hero">
+		{% for block in entry.heroHome %}
+			<div class="inner-media">
+				<a href="{{ block.linkHero }}">
+					<figure>
+						{% set image = block.imageHero.total() %}
+						<picture>
+							<source media="(min-width: 53.125em)" srcset="{{ block.imageHero[0].getUrl('heroHight') }}"/>
+							<source media="(min-width: 40.625em)" srcset="{{ block.imageHero[0].getUrl('heroMed') }}"/>
+			            	<source srcset="{{ block.imageHero[0].getUrl('heroLow') }}"/>
+							<img src="{{ block.imageHero[0].getUrl('heroHight') }}" alt="{{ block.tituloHero }}"/>
+						</picture>
+						
+					</figure>
+					<div class="inner-content">
+						<h2>{{ block.tituloHero }}</h2>
+						<p>{{ block.descripcionHero }}</p>
+						<span class="btn btn-default btn-sm">{{ block.linktitle }}</span>
+					</div>
+				</a>
+			</div>
+		    
+		{% endfor %}
+	</div><!--/.js-main-hero-->
+	<div class="quicklinks-box">
+		{{ craft.amNav.getNav("homeQuicklinks") }}
+	</div><!--/.quicklinks-box-->
+	<div class="slots-content">
+	      {% set entries = entry.slotItems %}
+			{% if entries | length %}
+			    {% for entry in entries %}
+			       <article class="slot-item">
+			        <div class="media">
+			          {% set image = entry.featuredThumb.first() %}
+			          {% if image %}
+			          <figure><img src="{{ image.getUrl('slotContent') }}" alt="{{ image.title }}"/></figure>
+			          {% endif %}
+			          {#<div style="left:{{ entry.plusIconLeft }}px; top: {{ entry.plusIconTop }}px;" class="plus-icon"></div>#}
+			        </div>
+			        <div class="slot-content">
+			          <h4>{{ entry.title }}</h4>
+			          <p>{{ entry.homeSummary }}</p>
+                      {% if entry.type == 'video' %}
+                      <a href="{{ entry.url }}" class="btn-link" title="{{ entry.title }}">ver ahora</a>
+                      {% elseif  entry.type == 'link' %}
+                      <a href="{{entry.linkUrl}}" class="btn-link">{{ entry.linkName }}</a>
+                      {% else %}
+                      <a href="{{ entry.url }}" class="btn-link">leer más</a>
+                      {% endif %}
+			        </div>
+			      </article>
+			    {% endfor %}
+
+			{% endif %}
+	</div><!--/.slots-content-->
+
+	<div class="slot-kit">
+		<div class="js--slot-kit">
+		{% for block in entry.kitItems %}
+        <div class="slot-item">
+          <div class="inner-content">
+            <h1>{{ block.nameKit }}</h1>
+            <div class="txt-bg">{{ block.textBackground }}</div>
+            <div class="media-kit">
+              <figure>
+              	{% set image = block.imageKit.total() %}
+              	<img src="{{ block.imageKit[0].getUrl}}" alt="{{ block.nameKit }}">
+              </figure>
+              {#<div style="left: 0; top: 0;" class="plus-icon"></div>
+              <div style="left: 0; top: 0;" class="plus-icon"></div>
+              <div style="left: 0; top: 0;" class="plus-icon"></div>
+              <div style="left: 0; top: 0;" class="plus-icon"></div>#}
+            </div>
+            <div class="slot-suggest">
+              <div class="slot-avatar">
+              	{% set image = block.userAvatar.total() %}
+                <figure><img src="{{ block.userAvatar[0].getUrl}}" alt="{{block.userName}}"></figure>
+              </div>
+              <div class="slot-content">
+                <h4>Recomienda</h4>
+                <p class="h3">{{block.userName}}</p>
+                <p class="h5">{{block.userPosition}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+	</div><!--/.slot-kit-->
+	<div class="home-feature">
+		{% include "_includes/featured-mobile" %}
+		{% include "_includes/featured-desktop" %}
+	</div><!--/.home-feature-->
+	
+    {% include "_includes/featured-history" %}
+
+    {% include "_includes/home-feed" %}
+    {% include "_includes/gmap" %}
+
+{% endblock %}
+{% block inlineJs %}
+<script type="text/template" id="instagram-template">
+<div class="item-carousel">
+  <figure>
+  	<img class="ms-instgrm-image"
+    src="%imageUrl%"
+    width="640"
+    height="640"
+    alt="%caption%">
+  </figure>
+  
+  <div class="ms-instgrm-overlay">
+    <div class="ms-instgrm-overlay-text">
+      <div class="ms-instgrm-handle">%username%</div>
+      <div class="ms-instgrm-caption">%caption%</div>
+    </div>
+    <a class="ms-instgrm-link" href="%link%" target="_blank">
+    <span class="ms-sr">%caption%</span>
+  </a>
+  </div>
+  
+</div>
+</script>
+<script>
+(function (factory) {
+  "use strict";
+  factory(window.jQuery);
+}(function ($) {
+  "use strict";
+  var timer;
+
+  var template = function (templateString) {
+    return function (data) {
+      var text = templateString;
+
+      $.each(data, function (key, value) {
+        var re = new RegExp("%" + key + "%", "g");
+        text = text.replace(re, value);
+      });
+
+      return text;
+    };
+  };
+
+  // template string for items
+  var templateString = $("#instagram-template").text();
+
+  // template function for items
+  var templateFunc = template(templateString);
+
+  // selection for item container
+  var instagramItems = $(".js-feed-carousel");
+
+  // array of image data
+  var instImages = [];
+
+
+
+  // instagram client id for API
+  var clientId = "5bd42020f6f04a17bb15996e4c3eae0a";
+
+  // index of slider position
+  var sliderIndex = -1;
+
+
+
+  // prefix for slide indexes
+  var itemClassPrefix = "item-carousel-";
+
+  var suffixes = [0, 1, 2];
+ 
+
+  var classString = $.map(suffixes, function (itemOffset) {
+    return itemClassPrefix + itemOffset;
+  })
+  
+
+  
+
+  // adds image to container
+  var addImage = function (index, image) {
+    var caption = image.caption.text
+      .replace(/"/g, "&#34;");
+
+    var imageData = {
+      imageUrl: image.images.standard_resolution.url,
+      caption:  caption,
+      username: image.caption.from.username,
+      link:     image.link
+    };
+
+    var imageHtml = $(templateFunc(imageData))
+      
+      
+
+    
+
+    instagramItems.append(imageHtml);
+
+    $(".ms-instgrm").removeClass("ms-instgrm-loading");
+  };
+
+  var tickSlides = function () {
+    sliderIndex = sliderIndex + 1;
+
+    positionSlides();
+
+    timer = window.setTimeout(tickSlides, delay);
+  };
+
+  // add images based on array of images
+  var addImages = function (images) {
+    instImages = images;
+    $.each(images, addImage);
+  };
+
+  $.ajax({
+    type: "GET",
+    dataType: "jsonp",
+    url: "https://api.instagram.com/v1/users/1032976822/media/recent",
+    data: {
+      "client_id": clientId
+    },
+    success: function (response) {
+      if (!response.data) {
+        return;
+      }
+      addImages(response.data);
+
+    }
+  });
+
+  function goTo(index) {
+    sliderIndex = index;
+
+    positionSlides();
+
+    window.clearTimeout(timer);
+  }
+
+  
+
+}));
+$(window).load(function() {
+	$(".js-feed-carousel").slick({
+  dots: true,
+  infinite: true,
+  speed: 500,
+  centerMode: false,
+  centerPadding: "60px",
+  slidesToShow: 3,
+  slidesToScroll: 3,
+  touchMove: true,
+  arrows: true,
+  variableWidth: false,
+  responsive: [
+    {
+      breakpoint: 768,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "40px",
+        slidesToShow: 1,
+        variableWidth: true
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: "40px",
+        slidesToShow: 1
+      }
+    }
+  ]
+});
+});
+</script>
+
+
+
+	
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{#
+ # News index template
+ # -------------------
+ #
+ # This template gets loaded when "/contact" is requested.
+-#}
+{% extends "_layouts/site" %}
+{% set title = "Contáctenos" %}
+{% block main %}
+
+
+    <section class="partition partition-bg partition-wrap">
+
+        <nav class="breadcrumbs category-aside">
+            <ul>
+                <li><a href="{{ siteUrl }}">home</a></li>
+                <li>contáctenos</li>
+            </ul>
+        </nav><!--/.breadcrumbs-->
+
+        <section class="form-contact">
+            <header>
+                <h2>Gacias</h2>
+                <p>{{ craft.request.getQuery('from') }} el mensaje se ha enviado con extio!</p>
+            </header>
+        </section>
+    </section>
+{% endblock %}
+
+
+

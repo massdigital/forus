@@ -1,0 +1,143 @@
+{#
+ # Article Body include template
+ # -----------------------------
+ #
+ # This template is used to output HTML for an "Article Body" Matrix field.
+ #
+ # An `entry` variable is expected to be defined.
+-#}
+
+{% macro getPosition(block) %}
+	{%- spaceless %}
+		{% set positionedTypes = ['text', 'pullQuote', 'image', 'quote'] %}
+		{{ block.type.handle in positionedTypes and block.position ? block.position : 'center' }}
+	{% endspaceless -%}
+{% endmacro %}
+
+{% from _self import getPosition %}
+
+{% set prevType = null %}
+{% set prevPosition = null %}
+{% set nextType = null %}
+{% set nextPosition = null %}
+{% set closedLastRow = true %}
+
+{% for block in entry.articleBody %}
+
+	{% set type = (nextType ?: block.type.handle) %}
+	{% set position = (nextPosition ?: getPosition(block)~'') %}
+
+	{% set nextType = (not loop.last ? block.next().type.handle) %}
+	{% set nextPosition = (not loop.last ? getPosition(block.next())~'') %}
+
+	{# Is this block floated to the left or right? #}
+	{% set isFloat = position in ['left', 'right'] %}
+
+	{# Is this a breakout block (a sole floated block before a centered block)? #}
+	{% set isBreakout = (
+		isFloat and
+		type in ['pullQuote', 'image'] and
+		(position == 'left' or prevPosition != 'left') and
+		nextPosition == 'center'
+	) %}
+
+	{# Are we starting a new row? #}
+	{% if position == 'full' %}
+		<div class="contain contain-full">
+	{% elseif closedLastRow %}
+		<div class="contain {%- if (type == 'gallery') %} contain-full{% endif -%} {%- if (type == 'splashImage') %} splash-large{% endif -%} {%- if (type == 'swatch') %} contain-full{% endif -%}" {%- if (type == 'swatch') %} style="background-color: {{ block.backgroundColor }};"{% endif -%}>
+		{% if type not in ['quote'] %}
+			<div class="row
+			{%- if (type == 'image' and position == 'center') %} center-block{% endif -%}">
+		{% endif %}
+	{% endif %}
+
+	{% if isFloat %}
+		<div class="contain-nested
+		{%- if isBreakout %} contain-breakout{% endif %}
+		{%- if position == 'right' %} push-right{% endif -%}
+		">
+	{% endif %}
+
+	{% switch type %}
+	{% case 'splashImage' %}
+	{% for image in block.splashHero %}
+	<img src="{{ image.getUrl() }}" alt="{{ image.title }}">
+	{% endfor %}
+	{% case 'lead' %}
+	<p class="lead">{{ block.lead }}</p>
+	{% case 'text' %}
+	{{ block.text }}
+	{% case 'pullQuote' %}
+	<blockquote {% if block.quoteHr %}class="orange"{% endif %}>
+
+    <p>{{ block.pullQuote }}</p>
+    {% if block.quoteHr %}<hr />{% endif %}
+    </blockquote>
+	{#Slider#}
+    {% case 'gallery' %}
+
+    <div class="js-carrousel-content">
+    {% for image in block.image %}
+		{% do image.setTransform({ width: 1440, height: 680 }) %}
+    	<img src="{{ image.getUrl() }}" alt="{{ image.title }}">
+
+
+    {% endfor %}
+    </div>
+    {% case 'image' %}
+			{% set image = block.image.first() %}
+			{% if image %}
+				{% if position == 'full' %}
+					{% do image.setTransform({ width: 1440, height: 580 }) %}
+				{% elseif position == 'center' %}
+					{% do image.setTransform({ width: 600 }) %}
+				{% elseif isBreakout %}
+					{% do image.setTransform({ width: 600 }) %}
+				{% else %}
+					{% do image.setTransform({ width: 600 }) %}
+				{% endif %}
+				<figure class="text-center">
+					<img{% if position == 'full' %} class="contain-media"{% endif %} src="{{ image.url }}" alt="{{ image.title }}">
+					<figurecaption>{{ block.caption }}</figurecaption>
+				</figure>
+
+			{% endif %}
+	{% case 'video' %}
+	<div class="videoWrapper">
+	    <iframe width="920" height="518" src="https://www.youtube.com/embed/{{ block.video }}?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen=""></iframe>
+	  </div>
+
+
+	  {% case 'swatch' %}
+
+    	<div class="contain">
+    		{{block.textSwatch}}
+    	</div>
+	  {% case 'subtitle' %}
+		<h4>{{ block.subtitle }}</h4>
+	{% endswitch %}
+
+	{% if isFloat %}
+		</div>
+	{% endif %}
+
+	{# Are we closing this row? #}
+	{% if not (
+		(position == 'left' and nextPosition == 'right') or
+		isBreakout
+	) %}
+		{% if position != 'full' and type not in ['slider', 'quote'] %}
+			</div>
+		{% endif %}
+		</div>
+		{% set closedLastRow = true %}
+	{% else %}
+		{% set closedLastRow = false %}
+	{% endif %}
+
+
+
+	{% set prevType = type %}
+	{% set prevPosition = position %}
+{% endfor %}

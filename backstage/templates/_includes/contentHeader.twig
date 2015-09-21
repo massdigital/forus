@@ -1,0 +1,33 @@
+{#
+ # Content Header include template
+ # -------------------------------
+ #
+ # This template is used to output HTML for the content header used in Work,
+ # Services, and News entries.
+ #
+ # An `entry` variable is expected to be defined.
+-#}
+
+{% set image = entry.featuredImage.first() %}
+{% if image %}
+<div class="inner-hero">
+  <figure>
+  	<img src="{{ image.getUrl() }}" alt="{{ entry.title }}"></figure>
+</div>
+
+{% endif %}
+
+
+<div class="contain">
+  <div class="byline">
+      <time>
+          {{ entry.postDate.format('M, d, Y') }}
+      </time>
+    <div class="shared-icon">
+        {{ jSocialButtons('facebook|twitter', options) }}
+        <a class="shared-fb"></a><a class="shared-tw"></a></div>
+  </div>
+</div>
+<header class="header-item">
+  <h1>{{ entry.title }}</h1>
+</header>

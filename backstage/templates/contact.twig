@@ -1,0 +1,135 @@
+{#
+ # News index template
+ # -------------------
+ #
+ # This template gets loaded when "/contact" is requested.
+-#}
+{% extends "_layouts/site" %}
+{% set title = "Contáctenos" %}
+{% block main %}
+
+
+    <section class="partition partition-bg partition-wrap">
+
+        <nav class="breadcrumbs category-aside">
+            <ul>
+                <li><a href="{{ siteUrl }}">home</a></li>
+                <li>contáctenos</li>
+            </ul>
+        </nav><!--/.breadcrumbs-->
+
+        <section class="form-contact">
+            <header>
+                <h2>contáctenos</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+            </header>
+            <ul class="default-list">
+                <li>
+                    <h4 class="italic">E-MAIL</h4><a href="mailto:info@merrellcolombia.com">info@merrellcolombia.com</a>
+                </li>
+                <li>
+                    <h4 class="italic">TELÉFONO</h4>
+                    <p>For all inquiries regarding your merrell.com order, please call us at (800) 288-3124 9am-5pm ET</p>
+                </li>
+                <li>
+                    <h4 class="italic">SERVICIO AL CLIENTE</h4>
+                    <address>1400 Industries Road, IN 47374</address>
+                </li>
+            </ul>
+            <div class="content-form">
+
+                {% macro errorList(errors) %}
+                    {% if errors %}
+                        <ul class="errors">
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endmacro %}
+
+                {% from _self import errorList %}
+
+                <form action="registration" method="POST" accept-charset="UTF-8">
+                    {{ getCsrfInput() }}
+                    <input type="hidden" name="action" value="contactForm/sendMessage">
+                    <input type="hidden" name="redirect" value="contact/thanks?from={fromName}">
+                    <header>
+                        <h4>mensaje</h4>
+                        <p>*Campos obligatorios</p>
+                        <p>Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+                    </header>
+                    <div class="row">
+                        <div class="group-form half-column">
+                            <label class="label">asunto</label>
+                            <select name="subject" data-validation="required">
+                                <option value="">--</option>
+                                <option  value="Orden de envío1">Orden de envío1</option>
+                                <option  value="Orden de envío2">Orden de envío2</option>
+                                <option  value="Orden de envío3">Orden de envío3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="group-form half-column">
+                            <label class="label">Nombres*</label>
+                            <input id="fromName" type="text" name="fromName" value="{% if message is defined %}{{ message.fromName }}{% endif %}" class="field-form" data-validation="required">
+                            {{ message is defined and message ? errorList(message.getErrors('fromName')) }}
+                        </div>
+                        <div class="group-form half-column">
+                            <label class="label">apellidos*</label>
+                            <input type="text" class="field-form" name="message[Apellidos][]" data-validation="required">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="group-form half-column">
+                            <label class="label">email*</label>
+                            <input id="fromEmail" type="email" name="fromEmail" value="{% if message is defined %}{{ message.fromEmail }}{% endif %}" class="field-form" data-validation="email">
+                            {{ message is defined and message ? errorList(message.getErrors('fromEmail')) }}
+                        </div>
+                        <div class="group-form half-column">
+                            <label class="label">teléfono*</label>
+                            <input id="phone" type="tel" name="message[Phone]" value="" class="field-form" data-validation="required">
+                        </div>
+                    </div>
+                    <div class="group-form">
+                        <label class="label">mensaje*</label>
+
+                        <textarea rows="10" cols="40" id="message" name="message[body]" class="field-form" data-validation="required">{% if message is defined %}{{ message.message }}{% endif %}</textarea>
+                        {{ message is defined and message ? errorList(message.getErrors('message')) }}
+                    </div>
+                    <div class="group-form group-checklist border">
+                        <label>
+                            <input type="checkbox" name="message[Newsletter][]" value="Si">
+                            <p>
+                                Si, me gustaria recibir emails sobre nuevas colecciones, ofertas exclusivas.
+                                <a href="#">
+                                    ¿Qué es esto?
+                                </a>
+                            </p>
+                        </label>
+                    </div>
+                    <div class="group-form text-center btn-group-lg">
+                        <input type="submit" value="enviar" class="btn btn-default">
+                    </div>
+
+
+
+                </form>
+                </div>
+
+            </div>
+        </section>
+    </section>
+{% endblock %}
+{% block inlineJs %}
+    <script>
+        var myLanguage = {
+            requiredFields: 'Este campo es obligatorio',
+            badEmail: 'No ha dado una dirección de correo electrónico correcta'
+        };
+        $.validate({
+            language : myLanguage
+        });
+    </script>
+{% endblock %}

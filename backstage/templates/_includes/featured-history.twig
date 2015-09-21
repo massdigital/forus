@@ -1,0 +1,37 @@
+{% set isHistory = craft.entries.section('blog').siEsHistoria('1').limit(1).find() %}
+{% paginate craft.entries.section('blog').limit(1).order('postDate desc') as blogEntries %}
+{% for historyEntry in isHistory %}
+<style>
+{% for asset in historyEntry.featuredImage %}
+  .home-histories{
+    background-image:url('{{ asset.url('mobileHistories') }}')
+  } 
+  @media (min-width: 53.125rem){
+    .home-histories{
+      background-image:url('{{ asset.url }}')
+    }
+  }
+{% endfor %}
+</style>
+    <div class="home-histories">
+    <div class="contain">
+      <header>
+        <h1 {% if historyEntry.colorText and historyEntry.colorText != '#000000' %}style="color: {{ historyEntry.colorText  }};"{% endif %}>{{historyEntry.historiasLine1}}<span>{{historyEntry.historiasLine2}}</span></h1>
+        <p {% if historyEntry.colorText and historyEntry.colorText != '#000000' %}style="color: {{ historyEntry.colorText  }};"{% endif %}>{{historyEntry.subHeading}}</p>
+      </header><a href="{{ historyEntry.url }}" class="btn btn-default" title="{{ historyEntry.title }}">ver historia</a>
+      <div class="inner-content">
+        <h3 >{{ historyEntry.historyCity }}</h3>
+        <span class="value1">
+        <span class="text">{{historyEntry.historyDate}}</span>
+        <span class="icon"></span></span><span class="value2"><span class="text">{{historyEntry.temp}}º</span><span class="icon"></span></span>
+        {#<span class="value3">
+          <span class="text">NULL</span>
+          <span class="icon"></span>
+          </span>#}
+      </div>
+    </div>
+  </div><!--/.home-histories-->
+{% endfor %}
+
+ {% endpaginate %}
+
